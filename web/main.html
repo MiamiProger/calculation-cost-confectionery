@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<title>Калькулятор себестоимости контитерских изделий</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="main.css">
+		<script src="eel.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<link rel="icon" type="image/x-icon" href="Miniartx-Gifts-2-Cake.ico">
+		<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@1,300&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container">
+			<legend>Карточка кондитерского изделия</legend>
+			<p><input type="text" id="name_pastry" required="" placeholder="Название кондитерского изделия"></p>
+			<p><input type="text" id="weight_pastry" placeholder="Вес готового кондитерского изделия в граммах (если известен)"></p>
+			<table class="table_positions" border=2 id="myTable">
+				<tr>
+					<th>Название ингредиента</th>
+					<th>В упаковке гр/мл/шт</th>
+					<th>Стоимость упаковки руб</th>
+					<th>В рецепте гр/мл/шт</th>
+				</tr>
+				<tbody>
+				<tr>
+					<td><input type="text" placeholder="Мука" id="name_positions0"></td>
+					<td><input type="text" placeholder="250" id="packaged0"></td>
+					<td><input type="text" placeholder="100" id="cost_package0"></td>
+					<td><input type="text" placeholder="150" id="recipe0"></td>
+				</tr>
+				</tbody>
+			</table> 
+			<a href="javascript://" id="addRow" onclick="addRow('myTable');return false;">Добавить строку</a>
+			<p><button id="info_pastry">Начать расчет себестоимости</button></p>
+		</div>
+
+		<div id="info"></div>
+
+	<script type="text/javascript">
+
+		let counter = 1;
+
+		function count() {
+			let arr = [];
+			for(let i=0; i< counter; i++){
+				let name_positions = document.getElementById('name_positions'+i).value;
+				let packaged = document.getElementById('packaged'+i).value;
+				let cost_package = document.getElementById('cost_package'+i).value;
+				let recipe = document.getElementById('recipe'+i).value;
+				arr.push([name_positions, parseInt(packaged, 10), parseInt(cost_package, 10), parseInt(recipe, 10)]);
+			}
+			return arr;
+		}
+
+		async function display_costprice() {
+			let arr_pastry = new Array();
+			let name_pastry = document.getElementById('name_pastry').value;
+			let weight_pastry = document.getElementById('weight_pastry').value;
+
+			let res = await eel.cost_calculation(name_pastry, weight_pastry, count())();
+			document.getElementById('info').innerHTML = res;
+		}
+
+		jQuery('#info_pastry').on('click', function() {
+			display_costprice();
+		});
+
+		function addRow(id){
+		    var tbody = document.getElementById(id).getElementsByTagName("TBODY")[0];
+		    var row = document.createElement("TR")
+		    var td1 = document.createElement("TD")
+		    let input1 = document.createElement('INPUT');
+			input1.className = "table_positions_td";
+			input1.id = "name_positions" + counter;
+		    td1.appendChild(input1)
+		    var td2 = document.createElement("TD")
+		    let input2 = document.createElement('INPUT');
+			input2.className = "table_positions_td";
+			input2.id = "packaged" + counter;
+		    td2.appendChild(input2)
+		    var td3 = document.createElement("TD")
+		    let input3 = document.createElement('INPUT');
+			input3.className = "table_positions_td";
+			input3.id = "cost_package" + counter;
+		    td3.appendChild(input3)
+		    var td4 = document.createElement("TD")
+		    let input4 = document.createElement('INPUT');
+			input4.className = "table_positions_td";
+			input4.id = "recipe" + counter;
+		    td4.appendChild(input4)
+		    row.appendChild(td1);
+		    row.appendChild(td2);
+		    row.appendChild(td3);
+		    row.appendChild(td4);
+		    tbody.appendChild(row);
+		    counter++;
+		}
+	</script>
+	</body>
+</html>

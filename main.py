@@ -1,41 +1,18 @@
-import math
+import eel
 
-def cost_calculation(product_positions):
+
+@eel.expose
+def cost_calculation(name_pastry, weight_pastry, arr_pastry):
 	cost_price_products = 0
-
-	for key, value in product_positions.items():
-		if key == "positions":
-			for item in value:
-				cost_price_position = math.ceil((int(item['cost_package'])/int(item['packaged'])) * int(item['recipe']))
-				cost_price_products += cost_price_position
-
-	product_positions.update({'cost_price_products': cost_price_products})
-
-	return product_positions
-
-def main():
-	print("Расчет себестоимости продукции")
-	array_positions = []
-
-	name_products = input("Введите названиие продукции: ")
-	product_positions = {'name_products': name_products}
-	quantity_positions = int(input("Введите количество позиций: "))
-	print("\n")
-
-	for item in range(quantity_positions):
-		name_positions = input("Введите название ингредиента: ")
-		packaged = input("В упаковке (гр/мл/шт): ")
-		cost_package = input("Стоимость упаковки (руб): ")
-		recipe = input("В рецепте (гр/мл/шт): ")
-		print("\n")
-
-		positions = {'name_positions': name_positions, 'packaged': packaged,
-		'cost_package': cost_package, 'recipe': recipe}
-		array_positions.append(positions)
 	
-	product_positions.update({'positions' : array_positions})
+	for i in arr_pastry:
+		cost_price_position = round((int(i[2])/int(i[1])) * int(i[3]))
+		cost_price_products += cost_price_position
 
-	print(cost_calculation(product_positions))
+	return 'Себестоимость '+ name_pastry+ ' = ' + str(cost_price_products)
+
 
 if __name__ == '__main__':
-	main()
+	eel.init("web")
+
+	eel.start("main.html", size=(850, 600))
